@@ -17,7 +17,7 @@ SECRET_KEY = os.environ.get("SECRET_KEY", "django-insecure-local-development-key
 DEBUG = os.environ.get("DEBUG", "False") == "True"
 
 ALLOWED_HOSTS = [
-    ".onrender.com",
+    "portfolio-1-d6rq.onrender.com",
     "localhost",
     "127.0.0.1",
 ]
@@ -36,8 +36,8 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
