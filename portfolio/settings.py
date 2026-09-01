@@ -17,7 +17,7 @@ SECRET_KEY = os.environ.get("SECRET_KEY", "django-insecure-local-development-key
 DEBUG = os.environ.get("DEBUG", "False") == "True"
 
 ALLOWED_HOSTS = [
-    "oas-1.onrender.com",
+    ".onrender.com",
     "localhost",
     "127.0.0.1",
 ]
