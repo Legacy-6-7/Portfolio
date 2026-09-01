@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login — {{ portfolio.name|default:"Portfolio" }}</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0a0c10;
+      --surface: #12161f;
+      --surface-2: #181d29;
+      --border: #242a38;
+      --text: #e4e7ec;
+      --muted: #8b93a1;
+      --accent: #ff8a5b;
+      --accent-2: #7ee2c6;
+      --radius: 10px;
+      --font-display: 'Space Grotesk', sans-serif;
+      --font-body: 'Inter', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(circle at 20% 30%, rgba(255,138,91,0.05), transparent 40%),
+        radial-gradient(circle at 80% 70%, rgba(126,226,198,0.05), transparent 40%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .login-card {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 420px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 40px 36px;
+      box-shadow: 0 25px 50px -20px rgba(0,0,0,0.5);
+    }
+
+    .logo {
+      font-family: var(--font-mono);
+      font-weight: 600;
+      font-size: 1.1rem;
+      text-align: center;
+      margin-bottom: 8px;
+    }
+    .logo span { color: var(--accent); }
+
+    .subtitle {
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+      color: var(--muted);
+      text-align: center;
+      margin-bottom: 36px;
+    }
+
+    h1 {
+      font-family: var(--font-display);
+      font-size: 1.6rem;
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 28px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    input[type="text"],
+    input[type="password"] {
+      width: 100%;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      padding: 13px 14px;
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 0.95rem;
+      transition: border-color 0.2s;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: var(--accent-2);
+    }
+
+    .errorlist {
+      list-style: none;
+      margin-top: 8px;
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: #ff6b6b;
+    }
+
+    .btn {
+      width: 100%;
+      margin-top: 10px;
+      font-family: var(--font-mono);
+      font-size: 0.95rem;
+      font-weight: 600;
+      padding: 14px;
+      border: none;
+      border-radius: 7px;
+      background: var(--accent);
+      color: #0a0c10;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .btn:hover {
+      background: #ffa27c;
+      transform: translateY(-2px);
+    }
+
+    .back-link {
+      display: block;
+      text-align: center;
+      margin-top: 24px;
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .back-link:hover { color: var(--accent-2); }
+
+    .messages {
+      margin-bottom: 20px;
+    }
+    .messages .error {
+      background: rgba(255, 107, 107, 0.1);
+      border: 1px solid #ff6b6b;
+      color: #ff6b6b;
+      padding: 12px;
+      border-radius: 7px;
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-card">
+    <div class="logo"><span>&lt;</span>login<span>/&gt;</span></div>
+    <p class="subtitle">// restricted access</p>
+
+    <h1>Welcome back</h1>
+
+    {% if form.errors %}
+      <div class="messages">
+        <div class="error">Invalid username or password</div>
+      </div>
+    {% endif %}
+
+    <form method="post">
+      {% csrf_token %}
+
+      <div class="form-group">
+        <label for="id_username">Username</label>
+        <input type="text" name="username" id="id_username" autofocus required>
+      </div>
+
+      <div class="form-group">
+        <label for="id_password">Password</label>
+        <input type="password" name="password" id="id_password" required>
+      </div>
+
+      <button type="submit" class="btn">Sign in</button>
+    </form>
+
+    <a href="{% url 'home' %}" class="back-link">← back to portfolio</a>
+  </div>
+</body>
+</html>

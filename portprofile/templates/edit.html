@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edit Portfolio</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0a0c10;
+      --surface: #12161f;
+      --surface-2: #181d29;
+      --border: #242a38;
+      --text: #e4e7ec;
+      --muted: #8b93a1;
+      --accent: #ff8a5b;
+      --accent-2: #7ee2c6;
+      --radius: 10px;
+      --font-display: 'Space Grotesk', sans-serif;
+      --font-body: 'Inter', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(circle at 20% 20%, rgba(255,138,91,0.04), transparent 40%),
+        radial-gradient(circle at 80% 60%, rgba(126,226,198,0.04), transparent 40%);
+      pointer-events: none;
+    }
+    .wrap {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 40px 24px 80px;
+      position: relative;
+      z-index: 1;
+    }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 40px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border);
+    }
+    .logo { font-family: var(--font-mono); font-weight: 600; }
+    .logo span { color: var(--accent); }
+    .header-links { display: flex; gap: 18px; }
+    .header-links a {
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      color: var(--muted);
+      text-decoration: none;
+    }
+    .header-links a:hover { color: var(--accent-2); }
+    h1 { font-family: var(--font-display); font-size: 1.8rem; margin-bottom: 8px; }
+    .subtitle { font-family: var(--font-mono); font-size: 0.85rem; color: var(--muted); margin-bottom: 36px; }
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px;
+      margin-bottom: 24px;
+    }
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    .card-title {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: var(--accent-2);
+      letter-spacing: 0.04em;
+    }
+    .add-btn {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: var(--accent);
+      text-decoration: none;
+      border: 1px solid var(--accent);
+      padding: 6px 14px;
+      border-radius: 6px;
+    }
+    .add-btn:hover { background: var(--accent); color: #0a0c10; }
+    .form-group { margin-bottom: 18px; }
+    label {
+      display: block;
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+    input, textarea {
+      width: 100%;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      padding: 12px 14px;
+      color: var(--text);
+      font-size: 0.95rem;
+    }
+    input:focus, textarea:focus { outline: none; border-color: var(--accent-2); }
+    textarea { min-height: 80px; resize: vertical; }
+    .item-list { display: flex; flex-direction: column; gap: 12px; }
+    .item {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .item-info { font-size: 0.95rem; }
+    .item-info small { color: var(--muted); font-size: 0.8rem; }
+    .item-actions { display: flex; gap: 10px; }
+    .item-actions a {
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      text-decoration: none;
+    }
+    .edit-link { color: var(--accent-2); }
+    .delete-link { color: #ff6b6b; }
+    .btn-row { display: flex; gap: 12px; margin-top: 28px; }
+    .btn {
+      font-family: var(--font-mono);
+      font-size: 0.9rem;
+      padding: 13px 26px;
+      border-radius: 7px;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+    }
+    .btn-primary { background: var(--accent); color: #0a0c10; font-weight: 600; }
+    .btn-secondary { background: transparent; border: 1px solid var(--border); color: var(--text); }
+    .empty { color: var(--muted); font-size: 0.9rem; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="logo"><span>&lt;</span>edit<span>/&gt;</span></div>
+      <div class="header-links">
+        <a href="{% url 'home' %}">← site</a>
+        <a href="{% url 'login' %}">logout</a>
+      </div>
+    </header>
+
+    <h1>Update Portfolio</h1>
+    <p class="subtitle">// manage everything from here</p>
+
+    <!-- PORTFOLIO FORM -->
+    <form method="post">
+      {% csrf_token %}
+      <div class="card">
+        <div class="card-title">01 — HERO & ABOUT</div>
+        <div class="form-group">
+          <label>Name</label>
+          {{ form.name }}
+        </div>
+        <div class="form-group">
+          <label>Role</label>
+          {{ form.role }}
+        </div>
+        <div class="form-group">
+          <label>Tagline</label>
+          {{ form.hero_tagline }}
+        </div>
+        <div class="form-group">
+          <label>About Paragraph 1</label>
+          {{ form.about_text_1 }}
+        </div>
+        <div class="form-group">
+          <label>About Paragraph 2</label>
+          {{ form.about_text_2 }}
+        </div>
+        <div class="form-group">
+          <label>About Paragraph 3</label>
+          {{ form.about_text_3 }}
+        </div>
+        <div class="form-group">
+          <label>Years Experience</label>
+          {{ form.years_experience }}
+        </div>
+        <div class="form-group">
+          <label>Projects Shipped</label>
+          {{ form.projects_shipped }}
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">02 — CONTACT</div>
+        <div class="form-group">
+          <label>Email</label>
+          {{ form.email }}
+        </div>
+        <div class="form-group">
+          <label>GitHub</label>
+          {{ form.github }}
+        </div>
+        <div class="form-group">
+          <label>LinkedIn</label>
+          {{ form.linkedin }}
+        </div>
+        <div class="form-group">
+          <label>Twitter / X</label>
+          {{ form.twitter }}
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button type="submit" class="btn btn-primary">Save Main Info</button>
+      </div>
+    </form>
+
+    <!-- SKILLS -->
+    <div class="card" style="margin-top:40px;">
+      <div class="card-header">
+        <div class="card-title">03 — SKILLS</div>
+        <a href="{% url 'add_skill' %}" class="add-btn">+ Add Skill</a>
+      </div>
+      <div class="item-list">
+        {% for skill in skills %}
+          <div class="item">
+            <div class="item-info">
+              {{ skill.name }} <small>({{ skill.level }}%)</small>
+            </div>
+            <div class="item-actions">
+              <a href="{% url 'edit_skill' skill.pk %}" class="edit-link">Edit</a>
+              <a href="{% url 'delete_skill' skill.pk %}" class="delete-link">Delete</a>
+            </div>
+          </div>
+        {% empty %}
+          <p class="empty">No skills yet.</p>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- PROJECTS -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">04 — PROJECTS</div>
+        <a href="{% url 'add_project' %}" class="add-btn">+ Add Project</a>
+      </div>
+      <div class="item-list">
+        {% for project in projects %}
+          <div class="item">
+            <div class="item-info">
+              {{ project.title }} <small>({{ project.category }})</small>
+            </div>
+            <div class="item-actions">
+              <a href="{% url 'edit_project' project.pk %}" class="edit-link">Edit</a>
+              <a href="{% url 'delete_project' project.pk %}" class="delete-link">Delete</a>
+            </div>
+          </div>
+        {% empty %}
+          <p class="empty">No projects yet.</p>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- EXPERIENCE -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">05 — EXPERIENCE</div>
+        <a href="{% url 'add_experience' %}" class="add-btn">+ Add Experience</a>
+      </div>
+      <div class="item-list">
+        {% for exp in experiences %}
+          <div class="item">
+            <div class="item-info">
+              {{ exp.role }} <small>@ {{ exp.organization }}</small>
+            </div>
+            <div class="item-actions">
+              <a href="{% url 'edit_experience' exp.pk %}" class="edit-link">Edit</a>
+              <a href="{% url 'delete_experience' exp.pk %}" class="delete-link">Delete</a>
+            </div>
+          </div>
+        {% empty %}
+          <p class="empty">No experience yet.</p>
+        {% endfor %}
+      </div>
+    </div>
+
+  </div>
+</body>
+</html>
