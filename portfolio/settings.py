@@ -12,7 +12,7 @@ SECRET_KEY = os.environ.get(
 DEBUG = os.environ.get("DEBUG", "False").lower() == "true"
 
 ALLOWED_HOSTS = [
-    "portfolio-1-d6rq.onrender.com",
+    "portfolio-g1se.onrender.com",
     "localhost",
     "127.0.0.1",
 ]
