@@ -30,7 +30,7 @@ def contact(request):
     safe_email = escape(email)
     safe_message = escape(message).replace("\n", "<br>")
 
-       # HTML email
+    # HTML email — notification to site owner
     notification_html = f"""
     <!DOCTYPE html>
     <html>
@@ -173,7 +173,138 @@ def contact(request):
     </body>
     </html>
     """
-    # Plain-text fallback
+
+    # HTML email — confirmation to the visitor (same structure/theme)
+    confirmation_html = f"""
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Thanks for reaching out</title>
+    </head>
+
+    <body style="
+        margin: 0;
+        padding: 30px;
+        background-color: #ececec;
+        font-family: Arial, Helvetica, sans-serif;
+    ">
+
+        <div style="
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.12);
+        ">
+
+            <div style="
+                background-color: #23232a;
+                padding: 28px 30px;
+                border-bottom: 4px solid #ff7a1a;
+            ">
+                <h1 style="
+                    margin: 0;
+                    color: #ffffff;
+                    font-size: 22px;
+                    letter-spacing: 0.3px;
+                ">
+                    Thanks for reaching out, {safe_name}
+                </h1>
+                <p style="
+                    margin: 6px 0 0 0;
+                    color: #ff9f4d;
+                    font-size: 13px;
+                    font-weight: bold;
+                    text-transform: uppercase;
+                    letter-spacing: 0.5px;
+                ">
+                    Message Received
+                </p>
+            </div>
+
+            <div style="padding: 30px;">
+
+                <p style="
+                    margin: 0 0 20px 0;
+                    color: #23232a;
+                    font-size: 15px;
+                    line-height: 1.5;
+                ">
+                    I've received your message and will get back to you as soon as I can.
+                    Here's a copy of what you sent for your records:
+                </p>
+
+                <strong style="
+                    display: block;
+                    color: #ff7a1a;
+                    font-size: 12px;
+                    text-transform: uppercase;
+                    letter-spacing: 0.5px;
+                    margin-bottom: 8px;
+                ">Your Message</strong>
+
+                <div style="
+                    background-color: #2f2f36;
+                    border-left: 4px solid #ff7a1a;
+                    padding: 16px 18px;
+                    margin: 0 0 25px 0;
+                    border-radius: 6px;
+                    color: #f2f2f2;
+                    font-size: 15px;
+                    line-height: 1.5;
+                ">
+                    {safe_message}
+                </div>
+
+                <hr style="
+                    border: none;
+                    border-top: 1px solid #eeeeee;
+                    margin: 20px 0;
+                ">
+
+                <p style="
+                    font-size: 12px;
+                    color: #999999;
+                    margin: 0 0 20px 0;
+                ">
+                    <strong style="color: #ff7a1a;">Submission ID:</strong><br>
+                    {submission_id}
+                </p>
+
+                <p style="
+                    font-size: 13px;
+                    color: #777777;
+                    margin: 0;
+                ">
+                    This is an automated confirmation — no need to reply.
+                </p>
+
+            </div>
+
+            <div style="
+                background-color: #23232a;
+                padding: 14px 30px;
+                text-align: center;
+            ">
+                <p style="
+                    margin: 0;
+                    font-size: 11px;
+                    color: #8a8a8a;
+                    letter-spacing: 0.3px;
+                ">
+                    Sent from your portfolio contact form
+                </p>
+            </div>
+
+        </div>
+
+    </body>
+    </html>
+    """
+
+    # Plain-text fallback (notification)
     notification_text = f"""
 New Portfolio Contact
 
@@ -193,6 +324,7 @@ Reply directly to this email to respond to the visitor.
     try:
         resend.api_key = settings.RESEND_API_KEY
 
+        # 1. Notify site owner
         result = resend.Emails.send({
             "from": settings.RESEND_FROM_EMAIL,
             "to": [settings.CONTACT_EMAIL],
@@ -204,9 +336,22 @@ Reply directly to this email to respond to the visitor.
         print("RESEND NOTIFICATION RESULT:", result)
         print("EMAIL SENT SUCCESSFULLY")
 
+        # 2. Confirm to the visitor (wrapped separately so a failure here
+        # doesn't block the owner notification from having already succeeded)
+        try:
+            confirmation_result = resend.Emails.send({
+                "from": settings.RESEND_FROM_EMAIL,
+                "to": [email],
+                "subject": "Thanks for your message!",
+                "html": confirmation_html,
+            })
+            print("RESEND CONFIRMATION RESULT:", confirmation_result)
+
+        except Exception as ce:
+            print("RESEND CONFIRMATION ERROR:", repr(ce))
+
     except Exception as e:
         print("RESEND EMAIL ERROR:", repr(e))
         raise
 
     return redirect("home")
-
