@@ -3,12 +3,13 @@ import os
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Security
 SECRET_KEY = os.environ.get(
     "SECRET_KEY",
     "django-insecure-local-development-key"
 )
 
-DEBUG = True
+DEBUG = os.environ.get("DEBUG", "False").lower() == "true"
 
 ALLOWED_HOSTS = [
     "portfolio-1-d6rq.onrender.com",
