@@ -6,9 +6,9 @@ import resend
 import uuid
 
 
-
 def home(request):
-    return render(request, 'home.html')
+    return render(request, "home.html")
+
 
 @require_POST
 def contact(request):
@@ -30,46 +30,109 @@ def contact(request):
     safe_email = escape(email)
     safe_message = escape(message).replace("\n", "<br>")
 
+    # HTML email
     notification_html = f"""
-    <div style="font-family: Arial, sans-serif; line-height: 1.6;">
-        <h2>New Portfolio Contact</h2>
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <title>New Portfolio Contact</title>
+    </head>
 
-        <p><strong>Name:</strong> {safe_name}</p>
-        <p><strong>Email:</strong> {safe_email}</p>
-
-        <p><strong>Message:</strong></p>
+    <body style="
+        margin: 0;
+        padding: 30px;
+        background-color: #f4f4f4;
+        font-family: Arial, Helvetica, sans-serif;
+    ">
 
         <div style="
-            background: #f5f5f5;
-            padding: 15px;
-            border-radius: 8px;
-            margin: 10px 0;
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
         ">
-            {safe_message}
+
+            <h1 style="
+                margin-top: 0;
+                color: #222222;
+            ">
+                New Portfolio Contact
+            </h1>
+
+            <hr style="
+                border: none;
+                border-top: 1px solid #eeeeee;
+                margin: 20px 0;
+            ">
+
+            <p>
+                <strong>Name:</strong><br>
+                {safe_name}
+            </p>
+
+            <p>
+                <strong>Email:</strong><br>
+                {safe_email}
+            </p>
+
+            <p>
+                <strong>Message:</strong>
+            </p>
+
+            <div style="
+                background-color: #f7f7f7;
+                border-left: 4px solid #3531C8;
+                padding: 15px;
+                margin: 10px 0 25px 0;
+                border-radius: 6px;
+                color: #333333;
+            ">
+                {safe_message}
+            </div>
+
+            <p style="
+                font-size: 13px;
+                color: #777777;
+            ">
+                <strong>Submission ID:</strong><br>
+                {submission_id}
+            </p>
+
+            <hr style="
+                border: none;
+                border-top: 1px solid #eeeeee;
+                margin: 20px 0;
+            ">
+
+            <p style="
+                font-size: 13px;
+                color: #777777;
+            ">
+                You can reply directly to this email to respond to the visitor.
+            </p>
+
         </div>
 
-        <hr>
-
-        <p>
-            <strong>Submission ID:</strong> {submission_id}
-        </p>
-
-        <p>
-            Reply directly to this email to respond to the visitor.
-        </p>
-    </div>
+    </body>
+    </html>
     """
 
+    # Plain-text fallback
     notification_text = f"""
 New Portfolio Contact
 
 Name: {name}
+
 Email: {email}
 
 Message:
 {message}
 
-Submission ID: {submission_id}
+Submission ID:
+{submission_id}
 
 Reply directly to this email to respond to the visitor.
 """
@@ -94,3 +157,4 @@ Reply directly to this email to respond to the visitor.
         raise
 
     return redirect("home")
+
