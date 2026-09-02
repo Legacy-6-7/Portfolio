@@ -9,7 +9,7 @@ SECRET_KEY = os.environ.get(
     "django-insecure-local-development-key"
 )
 
-DEBUG = os.environ.get("DEBUG", "False").lower() == "true"
+DEBUG = True
 
 ALLOWED_HOSTS = [
     "portfolio-g1se.onrender.com",

@@ -30,7 +30,7 @@ def contact(request):
     safe_email = escape(email)
     safe_message = escape(message).replace("\n", "<br>")
 
-    # HTML email
+       # HTML email
     notification_html = f"""
     <!DOCTYPE html>
     <html>
@@ -42,7 +42,7 @@ def contact(request):
     <body style="
         margin: 0;
         padding: 30px;
-        background-color: #f4f4f4;
+        background-color: #ececec;
         font-family: Arial, Helvetica, sans-serif;
     ">
 
@@ -51,75 +51,128 @@ def contact(request):
             margin: 0 auto;
             background-color: #ffffff;
             border-radius: 12px;
-            padding: 30px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.12);
         ">
 
-            <h1 style="
-                margin-top: 0;
-                color: #222222;
-            ">
-                New Portfolio Contact
-            </h1>
-
-            <hr style="
-                border: none;
-                border-top: 1px solid #eeeeee;
-                margin: 20px 0;
-            ">
-
-            <p>
-                <strong>Name:</strong><br>
-                {safe_name}
-            </p>
-
-            <p>
-                <strong>Email:</strong><br>
-                {safe_email}
-            </p>
-
-            <p>
-                <strong>Message:</strong>
-            </p>
-
             <div style="
-                background-color: #f7f7f7;
-                border-left: 4px solid #3531C8;
-                padding: 15px;
-                margin: 10px 0 25px 0;
-                border-radius: 6px;
-                color: #333333;
+                background-color: #23232a;
+                padding: 28px 30px;
+                border-bottom: 4px solid #ff7a1a;
             ">
-                {safe_message}
+                <h1 style="
+                    margin: 0;
+                    color: #ffffff;
+                    font-size: 22px;
+                    letter-spacing: 0.3px;
+                ">
+                    New Portfolio Contact
+                </h1>
+                <p style="
+                    margin: 6px 0 0 0;
+                    color: #ff9f4d;
+                    font-size: 13px;
+                    font-weight: bold;
+                    text-transform: uppercase;
+                    letter-spacing: 0.5px;
+                ">
+                    Website Inquiry
+                </p>
             </div>
 
-            <p style="
-                font-size: 13px;
-                color: #777777;
-            ">
-                <strong>Submission ID:</strong><br>
-                {submission_id}
-            </p>
+            <div style="padding: 30px;">
 
-            <hr style="
-                border: none;
-                border-top: 1px solid #eeeeee;
-                margin: 20px 0;
-            ">
+                <p style="margin: 0 0 20px 0;">
+                    <strong style="
+                        display: block;
+                        color: #ff7a1a;
+                        font-size: 12px;
+                        text-transform: uppercase;
+                        letter-spacing: 0.5px;
+                        margin-bottom: 4px;
+                    ">Name</strong>
+                    <span style="color: #23232a; font-size: 15px;">{safe_name}</span>
+                </p>
 
-            <p style="
-                font-size: 13px;
-                color: #777777;
+                <p style="margin: 0 0 20px 0;">
+                    <strong style="
+                        display: block;
+                        color: #ff7a1a;
+                        font-size: 12px;
+                        text-transform: uppercase;
+                        letter-spacing: 0.5px;
+                        margin-bottom: 4px;
+                    ">Email</strong>
+                    <span style="color: #23232a; font-size: 15px;">{safe_email}</span>
+                </p>
+
+                <strong style="
+                    display: block;
+                    color: #ff7a1a;
+                    font-size: 12px;
+                    text-transform: uppercase;
+                    letter-spacing: 0.5px;
+                    margin-bottom: 8px;
+                ">Message</strong>
+
+                <div style="
+                    background-color: #2f2f36;
+                    border-left: 4px solid #ff7a1a;
+                    padding: 16px 18px;
+                    margin: 0 0 25px 0;
+                    border-radius: 6px;
+                    color: #f2f2f2;
+                    font-size: 15px;
+                    line-height: 1.5;
+                ">
+                    {safe_message}
+                </div>
+
+                <hr style="
+                    border: none;
+                    border-top: 1px solid #eeeeee;
+                    margin: 20px 0;
+                ">
+
+                <p style="
+                    font-size: 12px;
+                    color: #999999;
+                    margin: 0 0 20px 0;
+                ">
+                    <strong style="color: #ff7a1a;">Submission ID:</strong><br>
+                    {submission_id}
+                </p>
+
+                <p style="
+                    font-size: 13px;
+                    color: #777777;
+                    margin: 0;
+                ">
+                    You can reply directly to this email to respond to the visitor.
+                </p>
+
+            </div>
+
+            <div style="
+                background-color: #23232a;
+                padding: 14px 30px;
+                text-align: center;
             ">
-                You can reply directly to this email to respond to the visitor.
-            </p>
+                <p style="
+                    margin: 0;
+                    font-size: 11px;
+                    color: #8a8a8a;
+                    letter-spacing: 0.3px;
+                ">
+                    Sent from your portfolio contact form
+                </p>
+            </div>
 
         </div>
 
     </body>
     </html>
     """
-
     # Plain-text fallback
     notification_text = f"""
 New Portfolio Contact
@@ -146,7 +199,6 @@ Reply directly to this email to respond to the visitor.
             "reply_to": email,
             "subject": f"Portfolio Contact from {name} [{submission_id}]",
             "html": notification_html,
-            "text": notification_text,
         })
 
         print("RESEND NOTIFICATION RESULT:", result)
