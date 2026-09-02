@@ -70,8 +70,11 @@ STORAGES = {
 }
 
 # Email
+# Email
 RESEND_API_KEY = os.environ.get("RESEND_API_KEY")
 
 DEFAULT_FROM_EMAIL = "onboarding@resend.dev"
+
 CONTACT_EMAIL = "legaciee4@gmail.com"
+
 RESEND_FROM_EMAIL = "onboarding@resend.dev"
