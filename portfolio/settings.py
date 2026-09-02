@@ -16,7 +16,7 @@ ALLOWED_HOSTS = [
     "localhost",
     "127.0.0.1",
 ]
-CSRF_TRUSTED_ORIGINS = ["https://portfolio-g1se.onrender.com/"]
+CSRF_TRUSTED_ORIGINS = ["https://portfolio-g1se.onrender.com"]
 
 INSTALLED_APPS = [
     "django.contrib.staticfiles",
@@ -79,3 +79,11 @@ DEFAULT_FROM_EMAIL = "onboarding@resend.dev"
 CONTACT_EMAIL = "legaciee4@gmail.com"
 
 RESEND_FROM_EMAIL = "onboarding@resend.dev"
+
+# Database
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "db.sqlite3",
+    }
+}
