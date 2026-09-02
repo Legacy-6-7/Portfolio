@@ -1,10 +1,9 @@
 from django.contrib import admin
 from django.urls import path
-from django.contrib.auth import views as auth_views
+from django.urls import path
 from portprofile import views
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', views.home, name='home'),
-    path('contact/', views.contact, name='contact'),
+    path("", views.home, name="home"),
+    path("contact/", views.contact, name="contact"),
 ]
